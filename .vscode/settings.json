@@ -73,6 +73,18 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "portable.h": "c",
+        "projdefs.h": "c",
+        "freertosconfig.h": "c",
+        "ch32v20x.h": "c",
+        "core_riscv.h": "c",
+        "system_ch32v20x.h": "c",
+        "ch32v20x_conf.h": "c",
+        "ch32v20x_misc.h": "c",
+        "ch32v20x_usb.h": "c",
+        "stdint.h": "c",
+        "ch32v20x_it.h": "c",
+        "nnls": "c"
     }
 }

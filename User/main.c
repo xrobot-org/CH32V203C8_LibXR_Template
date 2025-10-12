@@ -6,7 +6,7 @@
  * Description        : Main program body.
  *********************************************************************************
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
- * Attention: This software (modified or not) and binary are used for 
+ * Attention: This software (modified or not) and binary are used for
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
 
@@ -18,38 +18,12 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Global define */
-#define TASK1_TASK_PRIO     5
-#define TASK1_STK_SIZE      256
-#define TASK2_TASK_PRIO     5
-#define TASK2_STK_SIZE      256
-
 /* Global Variable */
-TaskHandle_t Task1Task_Handler;
-TaskHandle_t Task2Task_Handler;
-
-
-/*********************************************************************
- * @fn      GPIO_Toggle_INIT
- *
- * @brief   Initializes GPIOA.0/1
- *
- * @return  none
- */
-void GPIO_Toggle_INIT(void)
-{
-  GPIO_InitTypeDef  GPIO_InitStructure={0};
-
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-  GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-}
-
+TaskHandle_t DefaultTask_Handler;
+extern void app_main();
 
 /*********************************************************************
- * @fn      task1_task
+ * @fn      default_task
  *
  * @brief   task1 program.
  *
@@ -57,35 +31,38 @@ void GPIO_Toggle_INIT(void)
  *
  * @return  none
  */
-void task1_task(void *pvParameters)
-{
-    while(1)
-    {
-        GPIO_SetBits(GPIOA, GPIO_Pin_0);
-        vTaskDelay(250);
-        GPIO_ResetBits(GPIOA, GPIO_Pin_0);
-        vTaskDelay(250);
-    }
-}
+void default_task(void*) { app_main(); }
 
 /*********************************************************************
- * @fn      task2_task
+ * @fn      USBFS_RCC_Init
  *
- * @brief   task2 program.
- *
- * @param  *pvParameters - Parameters point of task2
+ * @brief   Initializes the usbfs clock configuration.
  *
  * @return  none
  */
-void task2_task(void *pvParameters)
+void USBFS_RCC_Init(void)
 {
-    while(1)
-    {
-        GPIO_ResetBits(GPIOA, GPIO_Pin_1);
-        vTaskDelay(500);
-        GPIO_SetBits(GPIOA, GPIO_Pin_1);
-        vTaskDelay(500);
-    }
+  RCC_ClocksTypeDef RCC_ClocksStatus = {0};
+  RCC_GetClocksFreq(&RCC_ClocksStatus);
+  if (RCC_ClocksStatus.SYSCLK_Frequency == 144000000)
+  {
+    RCC_USBCLKConfig(RCC_USBCLKSource_PLLCLK_Div3);
+  }
+  else if (RCC_ClocksStatus.SYSCLK_Frequency == 96000000)
+  {
+    RCC_USBCLKConfig(RCC_USBCLKSource_PLLCLK_Div2);
+  }
+  else if (RCC_ClocksStatus.SYSCLK_Frequency == 48000000)
+  {
+    RCC_USBCLKConfig(RCC_USBCLKSource_PLLCLK_Div1);
+  }
+#if defined(CH32V20x_D8W) || defined(CH32V20x_D8)
+  else if (RCC_ClocksStatus.SYSCLK_Frequency == 240000000 && RCC_USB5PRE_JUDGE() == SET)
+  {
+    RCC_USBCLKConfig(RCC_USBCLKSource_PLLCLK_Div5);
+  }
+#endif
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_USBFS, ENABLE);
 }
 
 /*********************************************************************
@@ -97,28 +74,16 @@ void task2_task(void *pvParameters)
  */
 int main(void)
 {
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-    SystemCoreClockUpdate();
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+  SystemCoreClockUpdate();
 
-    GPIO_Toggle_INIT();
-    /* create two task */
-    xTaskCreate((TaskFunction_t )task2_task,
-                        (const char*    )"task2",
-                        (uint16_t       )TASK2_STK_SIZE,
-                        (void*          )NULL,
-                        (UBaseType_t    )TASK2_TASK_PRIO,
-                        (TaskHandle_t*  )&Task2Task_Handler);
+  USBFS_RCC_Init();
 
-    xTaskCreate((TaskFunction_t )task1_task,
-                    (const char*    )"task1",
-                    (uint16_t       )TASK1_STK_SIZE,
-                    (void*          )NULL,
-                    (UBaseType_t    )TASK1_TASK_PRIO,
-                    (TaskHandle_t*  )&Task1Task_Handler);
-    vTaskStartScheduler();
+  xTaskCreate((TaskFunction_t)default_task, (const char*)"default_task", (uint16_t)1024,
+              (void*)NULL, (UBaseType_t)5, (TaskHandle_t*)&DefaultTask_Handler);
+  vTaskStartScheduler();
 
-    while(1)
-    {
-    }
+  while (1)
+  {
+  }
 }
-

@@ -1,29 +1,29 @@
 {
     "configurations": [
         {
-            "name": "Launch CH32V307",
+            "name": "Launch CH32V203",
             "type": "cortex-debug",
             "request": "launch",
             "servertype": "openocd",
             "configFiles": [
                 "wch-riscv.cfg"
             ],
-            "executable": "build/CH32V307VC.elf",
+            "executable": "build/CH32V203C8.elf",
             "runToEntryPoint": "main",
-            "device": "CH32V307",
+            "device": "CH32V203",
             "gdbPath": "riscv32-unknown-elf-gdb",
             "rtos": "FreeRTOS"
         },
         {
-            "name": "Attach CH32V307",
+            "name": "Attach CH32V203",
             "type": "cortex-debug",
             "request": "attach",
             "servertype": "openocd",
             "configFiles": [
                 "wch-riscv.cfg"
             ],
-            "executable": "build/CH32V307VC.elf",
-            "device": "CH32V307",
+            "executable": "build/CH32V203C8.elf",
+            "device": "CH32V203",
             "gdbPath": "riscv32-unknown-elf-gdb",
             "rtos": "FreeRTOS"
         }

@@ -156,8 +156,8 @@ SW_Handler:
 	csrr a1, mepc
 	store_x a1, 0( sp )					/* Save updated exception return address. */
 
-//	addi a1, x0, 0x20                   /* Disable HPE */
-//	csrs 0x804, a1
+	addi a1, x0, 0x20
+	csrs 0x804, a1
 
 	load_x sp, xISRStackTop				/* Switch to ISR stack before function call. */
 	jal vTaskSwitchContext
@@ -337,7 +337,7 @@ pxPortInitialiseStack:
 
 	csrr t0, mstatus					/* Obtain current mstatus value. */
 	andi t0, t0, ~0x8					/* Ensure interrupts are disabled when the stack is restored within an ISR.  Required when a task is created after the schedulre has been started, otherwise interrupts would be disabled anyway. */
-	addi t1, x0, 0x188					/* Generate the value 0x7880, which are the MPIE, MPP and FS bits to set in mstatus. */
+	addi t1, x0, 0x788					/* Generate the value 0x7880, which are the MPIE, MPP and FS bits to set in mstatus. */
 	slli t1, t1, 4
 	or t0, t0, t1						/* Set MPIE and MPP bits in mstatus value. */
 

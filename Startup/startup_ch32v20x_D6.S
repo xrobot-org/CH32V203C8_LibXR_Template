@@ -236,10 +236,10 @@ handle_reset:
     li t0, 0x1f
     csrw 0xbc0, t0
 /* Enable interrupt nesting and hardware stack */
-	li t0, 0x3
+	li t0, 0x2
 	csrw 0x804, t0
 /* Enable global interrupt and configure privileged mode */
-   	li t0, 0x88           
+   	li t0, 0x1800           
    	csrw mstatus, t0
 /* Configure the interrupt vector table recognition mode and entry address mode */
  	la t0, _vector_base

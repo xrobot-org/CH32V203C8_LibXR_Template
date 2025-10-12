@@ -11,8 +11,8 @@
 *******************************************************************************/
 #include "ch32v20x_it.h"
 
-void NMI_Handler(void) __attribute__((interrupt()));
-void HardFault_Handler(void) __attribute__((interrupt()));
+void NMI_Handler(void) __attribute__((interrupt));
+void HardFault_Handler(void) __attribute__((interrupt));
 
 /*********************************************************************
  * @fn      NMI_Handler
@@ -38,7 +38,7 @@ void NMI_Handler(void)
  */
 void HardFault_Handler(void)
 {
-  NVIC_SystemReset();
+  // NVIC_SystemReset();
   while (1)
   {
   }

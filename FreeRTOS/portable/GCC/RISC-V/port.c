@@ -158,6 +158,9 @@ void vPortSetupTimerInterrupt( void )
     /* set systick is lowest priority */
     NVIC_SetPriority(SysTicK_IRQn,0xf0);
 
+    NVIC_EnableIRQ(Software_IRQn);
+    NVIC_EnableIRQ(SysTicK_IRQn);
+
     SysTick->CTLR= 0;
     SysTick->SR  = 0;
     SysTick->CNT = 0;
@@ -204,15 +207,14 @@ extern void xPortStartFirstTask( void );
 		/* Enable mtime and external interrupts.  1<<7 for timer interrupt, 1<<11
 		for external interrupt.  _RB_ What happens here when mtime is not present as
 		with pulpino? */
-
-        NVIC_EnableIRQ(Software_IRQn);
-        NVIC_EnableIRQ(SysTicK_IRQn);
+	    NVIC_EnableIRQ(SysTicK_IRQn);
+	    NVIC_EnableIRQ(Software_IRQn);
 	}
 	#else
 	{
 		/* Enable external interrupts,global interrupt is enabled at first task start. */
-        NVIC_EnableIRQ(Software_IRQn);
-        NVIC_EnableIRQ(SysTicK_IRQn);
+	    NVIC_EnableIRQ(SysTicK_IRQn);
+	    NVIC_EnableIRQ(Software_IRQn);
 	}
 	#endif /* ( configMTIME_BASE_ADDRESS != 0 ) && ( configMTIMECMP_BASE_ADDRESS != 0 ) */
 
@@ -232,9 +234,11 @@ void vPortEndScheduler( void )
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
-void SysTick_Handler(void) __attribute__((interrupt()));
+void SysTick_Handler(void) __attribute__((interrupt));
 void SysTick_Handler( void )
 {
+	extern void libxr_systick_handler(void);
+	libxr_systick_handler();
     GET_INT_SP();
     portDISABLE_INTERRUPTS();
     SysTick->SR=0;
@@ -268,7 +272,7 @@ void vPortExitCritical( void )
 portUBASE_TYPE xPortSetInterruptMask(void)
 {
     portUBASE_TYPE uvalue=0;
-    __asm volatile("csrrw %0, mstatus, %1":"=r"(uvalue):"r"(0x1800));
+    __asm volatile("csrrw %0, mstatus, %1":"=r"(uvalue):"r"(0x7800));
     return uvalue;
 }
 
@@ -277,5 +281,6 @@ void vPortClearInterruptMask(portUBASE_TYPE uvalue)
 {
     __asm volatile("csrw  mstatus, %0"::"r"(uvalue));
 }
+
 
 
