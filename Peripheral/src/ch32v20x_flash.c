@@ -57,7 +57,7 @@
 
 /* Delay definition */
 #define EraseTimeout               ((uint32_t)0x000B0000)
-#define ProgramTimeout             ((uint32_t)0x00005000)
+#define ProgramTimeout             ((uint32_t)0x00015000)
 
 /* Flash Program Valid Address */
 #define ValidAddrStart             (FLASH_BASE)

@@ -25,7 +25,8 @@ extern "C" void app_main()
   LibXR::CH32GPIO led(GPIOB, GPIO_Pin_2);
 
   static constexpr auto LANG_PACK_EN_US = LibXR::USB::DescriptorStrings::MakeLanguagePack(
-      LibXR::USB::DescriptorStrings::Language::EN_US, "XRobot", "CDC Demo", "123456789");
+      LibXR::USB::DescriptorStrings::Language::EN_US, "XRobot", "CDC Demo",
+      "XRUSB-DEMO-");
 
   LibXR::USB::CDCUart cdc;
 
@@ -43,7 +44,7 @@ extern "C" void app_main()
       /* language */
       {&LANG_PACK_EN_US},
       /* config */
-      {{&cdc}});
+      {{&cdc}}, {reinterpret_cast<void*>(0x1FFFF7E8), 12});
 
   usb_dev.Init();
 

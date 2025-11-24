@@ -12,7 +12,11 @@
             "runToEntryPoint": "main",
             "device": "CH32V203",
             "gdbPath": "riscv32-unknown-elf-gdb",
-            "rtos": "FreeRTOS"
+            "rtos": "FreeRTOS",
+            "openOCDLaunchCommands": [
+                "init",
+                "wch_riscv unfreeze"
+            ],
         },
         {
             "name": "Attach CH32V203",
