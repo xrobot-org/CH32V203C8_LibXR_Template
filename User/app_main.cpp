@@ -46,9 +46,9 @@ extern "C" void app_main()
       /* config */
       {{&cdc}}, {reinterpret_cast<void*>(0x1FFFF7E8), 12});
 
-  usb_dev.Init();
+  usb_dev.Init(false);
 
-  usb_dev.Start();
+  usb_dev.Start(false);
 
   static uint8_t usart1_buffer[2][128];
 
