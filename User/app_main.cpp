@@ -32,15 +32,16 @@ extern "C" void app_main()
 
   static const LibXR::ConstRawData UID = {reinterpret_cast<void*>(0x1FFFF7E8), 12};
 
-  static LibXR::USB::CDCUart cdc_devfs;
+  using EPNumber = LibXR::USB::Endpoint::EPNumber;
+  static LibXR::USB::CDCUart cdc_devfs(EPNumber::EP1, EPNumber::EP1, EPNumber::EP2);
   static LibXR::CH32USBDeviceFS usb_devfs(
-      {{devfs_ep0_buffer}, {devfs_ep1_buffer}, {devfs_ep2_buffer}},
+      {{devfs_ep0_buffer}, {devfs_ep1_buffer}, {devfs_ep2_buffer, true}},
       LibXR::USB::DeviceDescriptor::PacketSize0::SIZE_8, 0x1209, 0x0201, 0x0100,
       {&LANG_PACK_EN_US_DEVFS}, {{&cdc_devfs}}, UID);
 
-  static LibXR::USB::CDCUart cdc_otgfs;
+  static LibXR::USB::CDCUart cdc_otgfs(EPNumber::EP1, EPNumber::EP1, EPNumber::EP2);
   static LibXR::CH32USBOtgFS usb_otgfs(
-      {{otgfs_ep0_buffer}, {otgfs_ep1_buffer}, {otgfs_ep2_buffer}},
+      {{otgfs_ep0_buffer}, {otgfs_ep1_buffer}, {otgfs_ep2_buffer, true}},
       LibXR::USB::DeviceDescriptor::PacketSize0::SIZE_8, 0x1209, 0x0202, 0x0100,
       {&LANG_PACK_EN_US_OTGFS}, {{&cdc_otgfs}}, UID);
 
