@@ -11,7 +11,7 @@ static uint8_t devfs_ep1_buffer[128];
 static uint8_t devfs_ep2_buffer[16];
 static uint8_t otgfs_ep0_buffer[8];
 static uint8_t otgfs_ep1_buffer[256];
-static uint8_t otgfs_ep2_buffer[16];
+static uint8_t otgfs_ep2_buffer[32];
 
 extern "C" void app_main()
 {
