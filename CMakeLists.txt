@@ -11,7 +11,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
 # Toolchain
-set(COMPILER_PREFIX "riscv32-unknown-elf-")
+set(COMPILER_PREFIX "riscv32-unknown-elf-" CACHE STRING "Cross-compiler prefix")
 set(CMAKE_C_COMPILER ${COMPILER_PREFIX}gcc)
 set(CMAKE_CXX_COMPILER ${COMPILER_PREFIX}g++)
 set(CMAKE_ASM_COMPILER ${COMPILER_PREFIX}gcc)
@@ -29,7 +29,7 @@ project(CH32V203C8)
 enable_language(C CXX ASM)
 
 # Flags
-set(CPU_FLAGS "-march=rv32imac_zicsr_zifencei -mabi=ilp32 -msmall-data-limit=8 -mno-save-restore")
+set(CPU_FLAGS "-march=rv32imc_zicsr_zifencei_zaamo -mabi=ilp32 -msmall-data-limit=8 -mno-save-restore")
 set(COMMON_FLAGS "-Wall -Wextra -fno-builtin -ffunction-sections -fdata-sections -fsigned-char -fsingle-precision-constant -Wunused -Wuninitialized")
 
 set(CMAKE_C_FLAGS "${CPU_FLAGS} ${COMMON_FLAGS} -fmessage-length=0" CACHE INTERNAL "" FORCE)
@@ -46,7 +46,7 @@ add_link_options(
   -Wl,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map
   --specs=nano.specs
   --specs=nosys.specs
-  -march=rv32imac_zicsr_zifencei
+  -march=rv32imc_zicsr_zifencei_zaamo
   -mabi=ilp32
   -flto
   -lm -lc
