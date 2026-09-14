@@ -25,6 +25,10 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
 project(CH32V203C8)
 
+if(CMAKE_C_COMPILER_VERSION VERSION_LESS 15.2)
+  message(FATAL_ERROR "CH32V203 LibXR template requires WCH GCC 15.2 or newer")
+endif()
+
 # Enable languages
 enable_language(C CXX ASM)
 
