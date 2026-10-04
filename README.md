@@ -19,15 +19,11 @@ libxr/                    LibXR 子模块
 
 The template uses the WCH CH32V203C8 (RISC-V, 64 KB Flash, 20 KB RAM) and runs FreeRTOS; the peripherals are provided by the LibXR `ch` driver. `User/main.c` sets the interrupt priority grouping and the USB clock, creates the FreeRTOS task that runs `app_main()` and starts the scheduler. The LibXR application code is in `User/app_main.cpp`. LibXR is the Git submodule `libxr/` at `https://github.com/xrobot-org/libxr.git`, and the submodule commit recorded in this repository pins the LibXR version in use.
 
-## 2. 配置一览 / Configurations
+## 2. 示例程序 / Example Application
 
-| 配置 | 用途 |
-| --- | --- |
-| `User/app_main.cpp` | 双 USB CDC 与 LED 闪烁：创建 `LibXR::CH32Timebase`，调用 `LibXR::PlatformInit(3, 1024)`，初始化 PB2 上的 LED 和 USART1（PA9 / PA10），同时启动 FSDEV 与 OTG FS 两个 USB 设备，各提供一个 CDC 串口（产品名 `CDC DEVFS` 和 `CDC OTGFS`）。`LibXR::STDIO` 绑定到 FSDEV 的 CDC，主循环中 LED 每 200 ms 翻转一次 |
+示例程序 `User/app_main.cpp` 演示双 USB CDC 与 LED 闪烁：创建 `LibXR::CH32Timebase`，调用 `LibXR::PlatformInit(3, 1024)`，初始化 PB2 上的 LED 和 USART1（PA9 / PA10），同时启动 FSDEV 与 OTG FS 两个 USB 设备，各提供一个 CDC 串口（产品名 `CDC DEVFS` 和 `CDC OTGFS`）。`LibXR::STDIO` 绑定到 FSDEV 的 CDC，主循环中 LED 每 200 ms 翻转一次。
 
-| Configuration | Purpose |
-| --- | --- |
-| `User/app_main.cpp` | Dual USB CDC and LED blink: creates `LibXR::CH32Timebase`, calls `LibXR::PlatformInit(3, 1024)`, initializes the LED on PB2 and USART1 (PA9 / PA10), and starts the FSDEV and OTG FS USB devices, each providing one CDC serial port (product names `CDC DEVFS` and `CDC OTGFS`). `LibXR::STDIO` is bound to the FSDEV CDC, and the main loop toggles the LED every 200 ms |
+The example application `User/app_main.cpp` shows dual USB CDC and an LED blink: it creates `LibXR::CH32Timebase`, calls `LibXR::PlatformInit(3, 1024)`, initializes the LED on PB2 and USART1 (PA9 / PA10), and starts the FSDEV and OTG FS USB devices, each providing one CDC serial port (product names `CDC DEVFS` and `CDC OTGFS`). `LibXR::STDIO` is bound to the FSDEV CDC, and the main loop toggles the LED every 200 ms.
 
 ## 3. 构建 / Build
 
@@ -59,6 +55,8 @@ The output is `build/CH32V203C8.elf`, `build/CH32V203C8.hex` and `build/CH32V203
 `wch-riscv.cfg` is an OpenOCD configuration for the WCH-LinkE (`wlinke` adapter, SDI interface, 6 MHz) and needs the WCH build of OpenOCD, which the image includes. `openocd -f wch-riscv.cfg` starts the debug server. In VS Code, `Launch CH32V203` in `.vscode/launch.json` uses this configuration through Cortex-Debug to download and debug `build/CH32V203C8.elf`, with `riscv32-wch-elf-gdb` as `gdbPath`.
 
 At run time the LED on PB2 toggles every 200 ms, each of the two USB ports enumerates one CDC serial port, and standard input and output use the FSDEV serial port.
+
+## 许可 / License
 
 本仓库以 Apache-2.0 发布，见 [LICENSE](LICENSE)；`User/main.c`、`Core/`、`Startup/`、`Peripheral/` 中的 WCH 代码和 `FreeRTOS/` 保留各自文件头中的版权与许可声明。
 
