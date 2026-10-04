@@ -60,6 +60,6 @@ The output is `build/CH32V203C8.elf`, `build/CH32V203C8.hex` and `build/CH32V203
 
 At run time the LED on PB2 toggles every 200 ms, each of the two USB ports enumerates one CDC serial port, and standard input and output use the FSDEV serial port.
 
-本仓库以 Apache-2.0 发布，见 [LICENSE](LICENSE)；`Core/`、`Startup/`、`Peripheral/` 中的 WCH 代码和 `FreeRTOS/` 保留各自文件头中的版权与许可声明。
+本仓库以 Apache-2.0 发布，见 [LICENSE](LICENSE)；`User/main.c`、`Core/`、`Startup/`、`Peripheral/` 中的 WCH 代码和 `FreeRTOS/` 保留各自文件头中的版权与许可声明。
 
-This repository is released under Apache-2.0, see [LICENSE](LICENSE); the WCH code in `Core/`, `Startup/` and `Peripheral/` and the code in `FreeRTOS/` keep the copyright and license notices in their file headers.
+This repository is released under Apache-2.0, see [LICENSE](LICENSE); the WCH code in `User/main.c`, `Core/`, `Startup/` and `Peripheral/` and the code in `FreeRTOS/` keep the copyright and license notices in their file headers.
