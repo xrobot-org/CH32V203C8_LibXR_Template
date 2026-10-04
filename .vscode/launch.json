@@ -11,7 +11,7 @@
             "executable": "build/CH32V203C8.elf",
             "runToEntryPoint": "main",
             "device": "CH32V203",
-            "gdbPath": "riscv32-unknown-elf-gdb",
+            "gdbPath": "riscv32-wch-elf-gdb",
             "rtos": "FreeRTOS",
             "openOCDLaunchCommands": [
                 "init",
@@ -28,7 +28,7 @@
             ],
             "executable": "build/CH32V203C8.elf",
             "device": "CH32V203",
-            "gdbPath": "riscv32-unknown-elf-gdb",
+            "gdbPath": "riscv32-wch-elf-gdb",
             "rtos": "FreeRTOS"
         }
     ]
