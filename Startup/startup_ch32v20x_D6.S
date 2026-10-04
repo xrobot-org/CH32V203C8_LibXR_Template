@@ -235,8 +235,8 @@ handle_reset:
 /* Configure pipelining and instruction prediction */
     li t0, 0x1f
     csrw 0xbc0, t0
-/* Enable interrupt nesting and hardware stack */
-	li t0, 0x2
+/* Enable V4B hardware stack and two-level interrupt nesting */
+	li t0, 0x3
 	csrw 0x804, t0
 /* Enable global interrupt and configure privileged mode */
    	li t0, 0x1800           
@@ -250,5 +250,4 @@ handle_reset:
 	la t0, main
 	csrw mepc, t0
 	mret
-
 

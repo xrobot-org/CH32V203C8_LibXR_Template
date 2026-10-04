@@ -11,7 +11,11 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
 # Toolchain
-set(COMPILER_PREFIX "riscv32-unknown-elf-")
+if(NOT DEFINED COMPILER_PREFIX)
+  find_program(WCH_GCC NAMES riscv32-wch-elf-gcc riscv-wch-elf-gcc REQUIRED)
+  string(REGEX REPLACE "gcc([.]exe)?$" "" COMPILER_PREFIX "${WCH_GCC}")
+endif()
+set(COMPILER_PREFIX "${COMPILER_PREFIX}" CACHE STRING "Cross-compiler prefix")
 set(CMAKE_C_COMPILER ${COMPILER_PREFIX}gcc)
 set(CMAKE_CXX_COMPILER ${COMPILER_PREFIX}g++)
 set(CMAKE_ASM_COMPILER ${COMPILER_PREFIX}gcc)
@@ -21,15 +25,19 @@ set(CMAKE_OBJCOPY ${COMPILER_PREFIX}objcopy)
 set(CMAKE_OBJDUMP ${COMPILER_PREFIX}objdump)
 set(SIZE ${COMPILER_PREFIX}size)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 project(CH32V203C8)
+
+if(CMAKE_C_COMPILER_VERSION VERSION_LESS 15.2)
+  message(FATAL_ERROR "CH32V203 LibXR template requires WCH GCC 15.2 or newer")
+endif()
 
 # Enable languages
 enable_language(C CXX ASM)
 
 # Flags
-set(CPU_FLAGS "-march=rv32imac_zicsr_zifencei -mabi=ilp32 -msmall-data-limit=8 -mno-save-restore")
+set(CPU_FLAGS "-march=rv32imc_zicsr_zifencei_zaamo -mabi=ilp32 -msmall-data-limit=8 -mno-save-restore")
 set(COMMON_FLAGS "-Wall -Wextra -fno-builtin -ffunction-sections -fdata-sections -fsigned-char -fsingle-precision-constant -Wunused -Wuninitialized")
 
 set(CMAKE_C_FLAGS "${CPU_FLAGS} ${COMMON_FLAGS} -fmessage-length=0" CACHE INTERNAL "" FORCE)
@@ -46,7 +54,7 @@ add_link_options(
   -Wl,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map
   --specs=nano.specs
   --specs=nosys.specs
-  -march=rv32imac_zicsr_zifencei
+  -march=rv32imc_zicsr_zifencei_zaamo
   -mabi=ilp32
   -flto
   -lm -lc
